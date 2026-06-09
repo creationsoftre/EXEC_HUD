@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>EXEC HUD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- avoid favicon 404 -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>">
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <img id="narcBadge" class="narc-badge hidden" src="narc.gif" alt="Narcissist" />
+  <!-- Branding + bottom dock -->
+  <div id="dockWrap" class="dock-wrap hidden">
+    <div id="brand" class="brand"></div>
+
+    <!-- Bottom dock (MIC, HP, AR, ID) -->
+    <div id="dock" class="dock">
+      <div class="row">
+        <div id="tile-mic" class="tile mic" title="Voice">
+          <i class="fa-solid fa-microphone"></i>
+        </div>
+
+        <div id="tile-hp" class="tile meter-tile hp" title="Health">
+          <i class="fa-solid fa-heart"></i>
+          <div class="bar">
+            <div class="fill"></div>
+            <div class="dim"></div>
+          </div>
+          <span id="hpPct" class="pct">100</span>
+        </div>
+
+        <div id="tile-ar" class="tile meter-tile ar" title="Armor">
+          <i class="fa-solid fa-shield-halved"></i>
+          <div class="bar">
+            <div class="fill"></div>
+            <div class="dim"></div>
+          </div>
+          <span id="arPct" class="pct">100</span>
+        </div>
+
+        <div id="tile-id" class="tile id" title="ID">000</div>
+      </div>
+
+      <!-- Edit controls (bottom-right, inline with dock) -->
+      <div id="editControls" class="edit-controls hidden">
+        <button id="btnCancel" class="btn secondary"><i class="fa-solid fa-xmark"></i> Cancel</button>
+        <button id="btnSave" class="btn primary"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating style editor panel -->
+  <div id="stylePanel" class="style-panel hidden">
+    <div class="style-header">
+      <div class="style-title">Style</div>
+      <div class="style-hint">Hex or RGBA supported. Use picker for quick tweaks.</div>
+    </div>
+    <label class="style-toggle">
+      <span>Logo GIF Overlay</span>
+      <input id="toggleLogoOverlay" type="checkbox" />
+    </label>
+    <div class="style-grid">
+      <label class="style-field">
+        <span>Dock BG</span>
+        <div class="style-inputs">
+          <input data-style="dockBg" type="text" spellcheck="false" placeholder="rgba(20,21,23,0.85)"/>
+          <input data-style-color="dockBg" type="color" />
+        </div>
+      </label>
+      <label class="style-field">
+        <span>Dock Border</span>
+        <div class="style-inputs">
+          <input data-style="dockBorder" type="text" spellcheck="false" placeholder="#2A2C30"/>
+          <input data-style-color="dockBorder" type="color" />
+        </div>
+      </label>
+      <label class="style-field">
+        <span>Tile BG</span>
+        <div class="style-inputs">
+          <input data-style="tileBg" type="text" spellcheck="false" placeholder="#1A1B1E"/>
+          <input data-style-color="tileBg" type="color" />
+        </div>
+      </label>
+      <label class="style-field">
+        <span>Tile Active</span>
+        <div class="style-inputs">
+          <input data-style="tileActive" type="text" spellcheck="false" placeholder="rgba(57,255,20,0.15)"/>
+          <input data-style-color="tileActive" type="color" />
+        </div>
+      </label>
+      <label class="style-field">
+        <span>Tile Idle</span>
+        <div class="style-inputs">
+          <input data-style="tileIdle" type="text" spellcheck="false" placeholder="rgba(20,21,23,0.85)"/>
+          <input data-style-color="tileIdle" type="color" />
+        </div>
+      </label>
+      <label class="style-field">
+        <span>Stroke</span>
+        <div class="style-inputs">
+          <input data-style="stroke" type="text" spellcheck="false" placeholder="rgba(57,255,20,0.35)"/>
+          <input data-style-color="stroke" type="color" />
+        </div>
+      </label>
+      <label class="style-field">
+        <span>Text</span>
+        <div class="style-inputs">
+          <input data-style="text" type="text" spellcheck="false" placeholder="#FFFFFF"/>
+          <input data-style-color="text" type="color" />
+        </div>
+      </label>
+      <label class="style-field">
+        <span>Glow</span>
+        <div class="style-inputs">
+          <input data-style="glow" type="text" spellcheck="false" placeholder="rgba(0,0,0,0.6)"/>
+          <input data-style-color="glow" type="color" />
+        </div>
+      </label>
+      <label class="style-field">
+        <span>HP Left</span>
+        <div class="style-inputs">
+          <input data-style="hpLeft" type="text" spellcheck="false" placeholder="#39FF14"/>
+          <input data-style-color="hpLeft" type="color" />
+        </div>
+      </label>
+      <label class="style-field">
+        <span>HP Right</span>
+        <div class="style-inputs">
+          <input data-style="hpRight" type="text" spellcheck="false" placeholder="#2EE60F"/>
+          <input data-style-color="hpRight" type="color" />
+        </div>
+      </label>
+      <label class="style-field">
+        <span>AR Left</span>
+        <div class="style-inputs">
+          <input data-style="arLeft" type="text" spellcheck="false" placeholder="#A8A8A8"/>
+          <input data-style-color="arLeft" type="color" />
+        </div>
+      </label>
+      <label class="style-field">
+        <span>AR Right</span>
+        <div class="style-inputs">
+          <input data-style="arRight" type="text" spellcheck="false" placeholder="#6B6B6B"/>
+          <input data-style-color="arRight" type="color" />
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- Top-right ammo UI (clip / total) -->
+  <div id="ammoHud" class="ammo-hud hidden">
+    <i class="fa-solid fa-gun"></i>
+    <span id="ammoClip">0</span>
+    <span class="sep">/</span>
+    <span id="ammoTotal">0</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
